@@ -1,0 +1,16 @@
+# Runs both containers together:  docker compose up --build
+# Run the notebook first so backend/vector_db exists.
+services:
+  backend:
+    build: ./backend
+    ports: ["5000:5000"]
+    environment:
+      - GH_MODELS_TOKEN=${GH_MODELS_TOKEN}
+      - API_KEY=${API_KEY}
+  frontend:
+    build: ./frontend
+    ports: ["8501:8501"]
+    environment:
+      - BACKEND_URL=http://backend:5000
+      - API_KEY=${API_KEY}
+    depends_on: [backend]
